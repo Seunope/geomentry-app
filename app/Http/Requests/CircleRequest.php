@@ -26,6 +26,7 @@ class CircleRequest extends FormRequest
     {
         return [
             'unit' => 'required',
+            'shape' => 'required',
        ];
     }
 
@@ -42,6 +43,8 @@ class CircleRequest extends FormRequest
     {
         return [
             'unit.required' => 'specify the radius unit for the calculation',
+            'shape.required' => 'shape is required for the service injection',
+
         ];
     }
 }

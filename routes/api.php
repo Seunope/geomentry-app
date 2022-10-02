@@ -26,7 +26,10 @@ Route::get('/greeting', function () {
 
 Route::group(['prefix'=> 'v1'], function () {
     Route::get('/circle/{radius}', [CircleController::class, 'index']);
+    Route::get('/circle/{radius1}/sum/{radius2}', [CircleController::class, 'sumShapeCalculation']);
     Route::get('/triangle/{height}/{base}/{side}', [TriangleController::class, 'index']);
+    Route::get('/triangle/{height1}/{base1}/{side1}/sum/{height2}/{base2}/{side2}', [TriangleController::class, 'sumShapeCalculation']);
+
 });
 
 

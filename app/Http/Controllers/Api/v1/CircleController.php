@@ -2,26 +2,18 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Models\Circle;
+use Illuminate\Http\Request;
+use App\Services\GeometryContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CircleRequest;
 
 class CircleController extends Controller
 {
-    public function index(CircleRequest $request, $radius)
+    public function index(Request $request, $radius)
     {
-
-        if(!is_numeric($radius)){
-            $finalData['status'] = false;
-            $finalData['message'] = 'Only numbers supported';
-            $finalData['data'] = [];
-            return response()->json($finalData, 400, [], JSON_PRETTY_PRINT);
-        }
-
-        if($radius < 0){
-            $finalData['status'] = false;
-            $finalData['message'] = 'Negative numbers not supported for area of a circle';
-            $finalData['data'] = [];
-            return response()->json($finalData, 400, [], JSON_PRETTY_PRINT);
+        $isDataClean = $this->validInput($radius);
+        if(!$isDataClean['status']){
+            return response()->json($isDataClean, 400, [], JSON_PRETTY_PRINT);
         }
 
         $circle = new Circle();
@@ -39,5 +31,66 @@ class CircleController extends Controller
         $finalData['data'] = $data;
 
         return response()->json($finalData, 200, [], JSON_PRETTY_PRINT);
+    }
+
+
+
+    public function sumShapeCalculation(CircleRequest $request, GeometryContract $circleService,$radius1, $radius2)
+    {
+        $isDataClean = $this->validInput($radius1);
+        if(!$isDataClean['status']){
+            return response()->json($isDataClean, 400, [], JSON_PRETTY_PRINT);
+        }
+
+        $isDataClean = $this->validInput($radius2);
+        if(!$isDataClean['status']){
+            return response()->json($isDataClean, 400, [], JSON_PRETTY_PRINT);
+        }
+
+        if($request->get('shape') !== 'circle'){
+            $disData['status'] = false;
+            $disData['message'] = 'wrong shape type, expected circle ';
+            $disData['data'] = [];
+            return response()->json($disData, 400, [], JSON_PRETTY_PRINT);
+        }
+
+        $resArea = $circleService->sumAreasOfShapes($radius1, $radius2);
+        $resCircumference = $circleService->sumCircumferenceOfShapes($radius1, $radius2);
+
+        $data ['type'] = "circle";
+        $data ['radius1'] = number_format($radius1, 1);
+        $data ['radius2'] = number_format($radius2, 1);
+        $data ['sum_surface'] = round($resArea, 2);
+        $data ['sum_circumference'] = round($resCircumference, 2);
+        $data['unit'] = $request['unit'];
+
+        $finalData['status'] = true;
+        $finalData['message'] = 'action was successful';
+        $finalData['data'] = $data;
+
+        return response()->json($finalData, 200, [], JSON_PRETTY_PRINT);
+    }
+
+
+    private function validInput ($radius){
+
+        if(!is_numeric($radius)){
+            return [
+                'status' => false,
+                'message' => 'Only numbers supported',
+                'data' => [],
+            ];
+        }
+
+        if($radius < 0){
+            return [
+                'status' => false,
+                'message' => 'Negative numbers not supported for area of a circle',
+                'data' => [],
+            ];
+        }
+        return [
+            'status' => true,
+        ];
     }
 }

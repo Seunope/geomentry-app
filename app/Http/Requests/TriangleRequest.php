@@ -26,9 +26,7 @@ class TriangleRequest extends FormRequest
     {
         return [
             'unit' => 'required',
-            // 'a' => 'required',
-            // 'b' => 'required',
-            // 'c' => 'required',
+            'shape' => 'required',
 
        ];
     }
@@ -46,6 +44,7 @@ class TriangleRequest extends FormRequest
     {
         return [
             'unit.required' => 'specify the unit for the calculation',
+            'shape.required' => 'shape is required for the service injection',
         ];
     }
 }
