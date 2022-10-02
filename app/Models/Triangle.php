@@ -10,17 +10,17 @@ class Triangle extends Model
     use HasFactory;
 
 
-    public static function SurfaceArea($input)
+    public static function SurfaceArea($height, $base)
     {
         /// 1/2(b*h)
-        $result = $input->height * $input->base / 2;
+        $result = $height * $base / 2;
         return $result;
     }
 
-    public static function Circumference($input)
+    public static function Circumference($height, $base, $side)
     {
         //perimeter
-        $result = $input->height + $input->base +  $input->side;
+        $result = $height + $base +  $side;
         return $result;
     }
 }

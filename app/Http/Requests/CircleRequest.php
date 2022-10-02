@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CircleRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class CircleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,23 @@ class CircleRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'unit' => 'required',
+       ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'status'   => false,
+            'message'   => 'something is wrong with your input',
+            'data'      => $validator->errors()
+        ]));
+    }
+
+    public function messages()
+    {
+        return [
+            'unit.required' => 'specify the radius unit for the calculation',
         ];
     }
 }

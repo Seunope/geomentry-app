@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\CircleController;
+use App\Http\Controllers\Api\v1\TriangleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/greeting', function () {
     return 'Hello World';
 });
-Route::get('/circle', [CircleController::class, 'index']);
+
+Route::group(['prefix'=> 'v1'], function () {
+    Route::get('/circle/{radius}', [CircleController::class, 'index']);
+    Route::get('/triangle/{height}/{base}/{side}', [TriangleController::class, 'index']);
+});
+
+

@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class TriangleRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class TriangleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,27 @@ class TriangleRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'unit' => 'required',
+            // 'a' => 'required',
+            // 'b' => 'required',
+            // 'c' => 'required',
+
+       ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'something is wrong with your input',
+            'data'      => $validator->errors()
+        ]));
+    }
+
+    public function messages()
+    {
+        return [
+            'unit.required' => 'specify the unit for the calculation',
         ];
     }
 }
