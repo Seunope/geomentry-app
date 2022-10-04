@@ -9,8 +9,8 @@
 
 ## Run Project
 
-php artisan serve
-php artisan test
+-   php artisan serve
+-   php artisan test
 
 ## About Laravel
 
